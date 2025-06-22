@@ -21,3 +21,15 @@ jobs:
         docker build -t reactappimg:${GITHUB_RUN_NUMBER} .
         docker tag reactappimg:${GITHUB_RUN_NUMBER} frankisinfotech/reactapp:${GITHUB_RUN_NUMBER}
         docker push frankisinfotech/reactapp:${GITHUB_RUN_NUMBER}
+
+  install_kubectl:
+    needs: buildimg
+    
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: install kubectl
+      run: |
+        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+        chmod +x kubectl
+        sudo mv kubectl /usr/local/bin/
