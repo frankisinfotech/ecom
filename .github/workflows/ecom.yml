@@ -33,3 +33,33 @@ jobs:
         curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
         chmod +x kubectl
         sudo mv kubectl /usr/local/bin/
+
+
+  deploytoCluster:
+    needs: install_kubectl
+    
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Code Checkout
+      uses: actions/checkout@v4.2.2
+
+    - name: LoginToAWS
+      uses: aws-actions/configure-aws-credentials@v4.1.0
+      with:
+        aws-access-key-id:     ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region:            ${{ secrets.REGION }}
+
+    - name: configure kubectl
+      env:
+        KUBECONFIG: ${{ runner.temp }}/kubeconfig
+
+      run: |
+        aws eks update-kubeconfig --name ${{ secrets.EKS_CLUSTER_NAME }} --region ${{ secrets.REGION }} --kubeconfig $KUBECONFIG
+        echo "KUBECONFIG=$KUBECONFIG" >> $GITHUB_ENV
+
+    - name: deployToEKS
+      run: |
+        sed -i "s|image: REPOSITORY_TAG|image: frankisinfotech/reactapp:${GITHUB_RUN_NUMBER}|g" ./deploy.yaml
+        kubectl apply -f ./deploy.yaml
