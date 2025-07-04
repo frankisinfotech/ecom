@@ -16,7 +16,6 @@ pipeline {
           sh '''
             docker build -t ${REPOSITORY_TAG} .
             docker push ${REPOSITORY_TAG}
-            // docker tag ecomimg frankisinfotech/ecomimg
           '''
         }
       }
