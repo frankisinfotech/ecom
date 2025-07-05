@@ -7,7 +7,7 @@ pipeline {
   //   DOCKERHUB_USERNAME = "frankisinfotech"
   //   REPOSITORY_TAG = "${DOCKERHUB_USERNAME}/${ORGANIZATION_NAME}-${SERVICE_NAME}:${BUILD_ID}"
   //   }
- 
+  
   stages {
 
     stage (buildimg_to_pub_ECR) {
