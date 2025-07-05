@@ -14,7 +14,7 @@ pipeline {
   
   stages {
 
-    stage ('buildimg_to_pub_ECR') {
+    stage ('pub_ECR') {
       steps {
         withEnv(["AWS_ACCESS_KEY_ID=${env.AWS_ACCESS_KEY_ID}", "AWS_SECRET_ACCESS_KEY=${env.AWS_SECRET_ACCESS_KEY}", "AWS_DEFAULT_REGION=${env.AWS_DEFAULT_REGION}"]){
           sh '''
@@ -27,7 +27,7 @@ pipeline {
       }
     }
 
-    stage ('build_to_priv_ECR') {
+    stage ('priv_ECR') {
       steps {
         sh '''
           docker login -u AWS -p $(aws ecr get-login-password --region eu-west-1) ${PRIVATE_REPO}
@@ -37,7 +37,7 @@ pipeline {
           '''
           }
         }
-    stage ('Delete_Images') {
+    stage ('Del_Img') {
       steps {
         sh 'docker rmi -f $(docker images -q)'
       }
