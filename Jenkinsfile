@@ -37,6 +37,11 @@ pipeline {
           '''
           }
         }
+    stage (Delete_Images) {
+      steps {
+        sh 'docker rmi -f $(docker images -q)'
+      }
+    }
 
   }
 } 
