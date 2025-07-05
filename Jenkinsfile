@@ -27,10 +27,11 @@ pipeline {
     stage (build_to_priv_ECR) {
       steps {
         sh '''
-          docker login -u AWS -p $(aws ecr get-login-password --region eu-west-1) 765176032689.dkr.ecr.eu-west-1.amazonaws.com'
-          docker build -t merchantapi .'
-          docker tag merchantapi 765176032689.dkr.ecr.eu-west-1.amazonaws.com/merchantapi:${BUILD_ID}'
-          docker push 765176032689.dkr.ecr.eu-west-1.amazonaws.com/merchantapi:${BUILD_ID}'
+          docker login -u AWS -p $(aws ecr get-login-password --region eu-west-1) 765176032689.dkr.ecr.eu-west-1.amazonaws.com
+          docker build -t merchantapi .
+          docker tag merchantapi 765176032689.dkr.ecr.eu-west-1.amazonaws.com/merchantapi:${BUILD_ID}
+          docker push 765176032689.dkr.ecr.eu-west-1.amazonaws.com/merchantapi:${BUILD_ID}
+          '''
           }
         }
 
