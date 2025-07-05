@@ -7,6 +7,9 @@ pipeline {
     REPO = "public.ecr.aws/g0b5g9q2"
     DOCKERHUB_USERNAME = "frankisinfotech"
     REPOSITORY_TAG = "${DOCKERHUB_USERNAME}/${ORGANIZATION_NAME}-${SERVICE_NAME}:${BUILD_ID}"
+
+    PRIVATE_REPO_APP   = "merchantapi"
+    PRIVATE_REPO       = "765176032689.dkr.ecr.eu-west-1.amazonaws.com"
     }
   
   stages {
@@ -27,10 +30,10 @@ pipeline {
     stage (build_to_priv_ECR) {
       steps {
         sh '''
-          docker login -u AWS -p $(aws ecr get-login-password --region eu-west-1) 765176032689.dkr.ecr.eu-west-1.amazonaws.com
-          docker build -t merchantapi .
-          docker tag merchantapi 765176032689.dkr.ecr.eu-west-1.amazonaws.com/merchantapi:${BUILD_ID}
-          docker push 765176032689.dkr.ecr.eu-west-1.amazonaws.com/merchantapi:${BUILD_ID}
+          docker login -u AWS -p $(aws ecr get-login-password --region eu-west-1) ${PRIVATE_REPO}
+          docker build -t ${PRIVATE_REPO_APP} .
+          docker tag ${PRIVATE_REPO_APP} ${PRIVATE_REPO}/${PRIVATE_REPO_APP}:${BUILD_ID}
+          docker push ${PRIVATE_REPO}/${PRIVATE_REPO_APP}:${BUILD_ID}
           '''
           }
         }
