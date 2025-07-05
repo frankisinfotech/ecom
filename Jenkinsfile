@@ -17,7 +17,7 @@ pipeline {
           sh '''
             docker login -u AWS -p $(aws ecr-public get-login-password --region us-east-1) ${REPO}
             docker build -t ${SERVICE_NAME} .
-            docker tag reactapp:latest ${AWS_REPO}:${BUILD_ID}
+            docker tag ${SERVICE_NAME} ${AWS_REPO}:${BUILD_ID}
             docker push ${AWS_REPO}:${BUILD_ID}
           '''
         }
