@@ -11,7 +11,7 @@ pipeline {
     PRIVATE_REPO_APP   = "merchantapi"
     PRIVATE_REPO       = "765176032689.dkr.ecr.eu-west-1.amazonaws.com"
     }
-  
+   
   stages {
 
     stage ('pub_ECR') {
