@@ -9,7 +9,7 @@ pipeline {
     REPOSITORY_TAG = "${DOCKERHUB_USERNAME}/${ORGANIZATION_NAME}-${SERVICE_NAME}:${BUILD_ID}"
     }
  
- 
+  
   stages {
 
      stage ('BuildImg') {
