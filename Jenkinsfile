@@ -2,7 +2,7 @@ pipeline {
   agent any
 
   environment {
-
+    REPOSITORY_TAG = 'frankisinfotech/reactapp:${BUILD_ID}'
   }
 
 
