@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
       - name: ecom
-        image: REPOSITORY_TAG
+        image: ${REPOSITORY_TAG}
 
 ---
 
