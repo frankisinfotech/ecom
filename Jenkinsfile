@@ -5,7 +5,7 @@ pipeline {
     REPOSITORY_TAG = 'frankisinfotech/reactapp:${BUILD_ID}'
   }
  
-
+ 
   stages {
 
      stage ('BuildImg') {
