@@ -2,8 +2,12 @@ pipeline {
   agent any
 
   environment {
-    REPOSITORY_TAG = 'frankisinfotech/reactapp:${BUILD_ID}'
-  }
+    
+    SERVICE_NAME = "ecom"
+    ORGANIZATION_NAME = "frankisinfotech"
+    DOCKERHUB_USERNAME = "frankisinfotech"
+    REPOSITORY_TAG = "${DOCKERHUB_USERNAME}/${ORGANIZATION_NAME}-${SERVICE_NAME}:${BUILD_ID}"
+    }
  
  
   stages {
@@ -13,8 +17,8 @@ pipeline {
         withDockerRegistry([credentialsId: "DOCKERHUB", url: ""]) {
           sh '''
               docker build -t reactimg .
-              docker tag reactimg frankisinfotech/reactapp:${BUILD_ID}
-              docker push frankisinfotech/reactapp:${BUILD_ID}
+              docker tag reactimg ${REPOSITORY_TAG}
+              docker push ${REPOSITORY_TAG}
           '''
          }
        }
