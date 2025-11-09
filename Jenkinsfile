@@ -3,26 +3,25 @@ pipeline {
 
   environment {
     
-    SERVICE_NAME = "ecom"
-    ORGANIZATION_NAME = "frankisinfotech"
-    DOCKERHUB_USERNAME = "frankisinfotech"
-    REPOSITORY_TAG = "${DOCKERHUB_USERNAME}/${ORGANIZATION_NAME}-${SERVICE_NAME}:${BUILD_ID}"
+        TAG                       = "${BUILD_ID}"
+        AWS_PRIVATE_REPO          = "765176032689.dkr.ecr.eu-west-1.amazonaws.com"
+        AWS_APP_NAME              = "merchantpay"
+        REPOSITORY_TAG            = "${AWS_PRIVATE_REPO}/${AWS_APP_NAME}:${TAG}"
     }
  
   
   stages {
 
      stage ('BuildImg') {
-      steps {
-        withDockerRegistry([credentialsId: "DOCKERHUB", url: ""]) {
-          sh '''
-              docker build -t reactimg .
-              docker tag reactimg ${REPOSITORY_TAG}
-              docker push ${REPOSITORY_TAG}
-          '''
+          steps {
+             withEnv(["AWS_ACCESS_KEY_ID=${env.AWS_ACCESS_KEY_ID}", "AWS_SECRET_ACCESS_KEY=${env.AWS_SECRET_ACCESS_KEY}", "AWS_DEFAULT_REGION=${env.AWS_DEFAULT_REGION}"]) {
+                sh 'docker login -u AWS -p $(aws ecr get-login-password --region eu-west-1) ${AWS_PRIVATE_REPO}'
+                sh 'docker build -t ${AWS_APP_NAME}:${TAG} .'
+                sh 'docker tag ${AWS_APP_NAME}:${TAG} ${AWS_PRIVATE_REPO}/${AWS_APP_NAME}:${TAG}'
+                sh 'docker push ${AWS_PRIVATE_REPO}/${AWS_APP_NAME}:${TAG}'
          }
        }
-     }
+    }
 
     stage ("Install kubectl"){
             steps {
@@ -34,7 +33,7 @@ pipeline {
         
     stage ('Deploy') {
             steps {
-                sh 'aws eks update-kubeconfig --region eu-west-1 --name ekscluster'
+                sh 'aws eks update-kubeconfig --region eu-west-1 --name eks'
                 sh 'envsubst < ${WORKSPACE}/deploy.yaml | ./kubectl apply -f -'
             }
     }
