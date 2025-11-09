@@ -9,7 +9,7 @@ pipeline {
         REPOSITORY_TAG            = "${AWS_PRIVATE_REPO}/${AWS_APP_NAME}:${TAG}"
     }
  
-  
+   
   stages {
 
      stage ('BuildImg') {
